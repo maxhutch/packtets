@@ -1,9 +1,9 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[5]:
 
-get_ipython().magic('matplotlib inline')
+get_ipython().magic('matplotlib notebook')
 import numpy as np
 from numpy.random import uniform
 import igraph 
@@ -18,8 +18,8 @@ from packtets.geometry import Tet
 from packtets.graph import packing_graph
 from packtets.graph import greedy_max
 from packtets.graph import exact_igraph
-N = 20
-L = 1
+N = 65
+L = 3
 vx = np.array([L,0,0])
 vy = np.array([0,L,0])
 vz = np.array([0,0,L])
@@ -51,7 +51,45 @@ print(L, num_packed, packing_ratio)
 print(">> Took {:7.4f}s to compute independence number".format(time()-t0))
 
 
-# In[5]:
+# In[ ]:
+
+time_budget = 5*60
+
+start_time = time()
+
+N_add = 10
+while time() - start_time < time_budget:
+    old_tets = tets
+    tets = []
+    for j in range(num_packed):
+        tets.append(old_tets[max_ind_set[j]])
+    for j in range(N_add):
+        center = uniform(0, L, 3)
+        theta = uniform(0, 2*np.pi)
+        phi = uniform(0, 2*np.pi)
+        psi = uniform(9, 2*np.pi)
+        tets.append(Tet(center, theta, phi, psi)) 
+        
+    t0 = time()
+    g = packing_graph(tets, vx, vy, vz, num_packed)
+    t_make = time() - t0
+    
+    t0 = time()
+    max_ind_set = exact_igraph(g)
+    t_solve = time() - t0
+    
+    if t_solve < t_make:
+        N_add += 1
+    else:
+        N_add += -1
+    
+    num_packed = len(max_ind_set)
+    packing_ratio = num_packed / (6*np.sqrt(2)) / L**3
+    print(packing_ratio, num_packed, N_add)
+    #print(">> Took {:7.4f}s to compute independence number".format(time()-t0))
+
+
+# In[ ]:
 
 import scipy as sp
 ax = a3.Axes3D(plt.figure(10))
@@ -63,6 +101,5 @@ for i in max_ind_set:
         ax.add_collection3d(tri)
 ax.set_xlim(0,L)
 ax.set_ylim(0,L)
-ax.set_zlim(0,L)
-plt.show()
+ax.set_zlim(0,L);
 

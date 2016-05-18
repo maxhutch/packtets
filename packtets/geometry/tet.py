@@ -27,6 +27,9 @@ class Tet():
         self.psi = psi
         self.verts = [np.dot(rotation, x) + self.center for x in self.center_verts]
         return
+
+    def __repr__(self):
+        return "Tet({}, {}, {}, {})".format(self.center, self.theta, self.phi, self.psi)
     
     def collision(self, other):
         dist = np.sum(np.square(self.center - other.center))
