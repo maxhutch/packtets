@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 get_ipython().magic('matplotlib notebook')
 import numpy as np
@@ -12,7 +12,7 @@ import mpl_toolkits.mplot3d as a3
 import matplotlib.pyplot as plt
 
 
-# In[6]:
+# In[2]:
 
 from packtets.geometry import Tet
 from packtets.graph import packing_graph
@@ -51,51 +51,20 @@ print(L, num_packed, packing_ratio)
 print(">> Took {:7.4f}s to compute independence number".format(time()-t0))
 
 
-# In[ ]:
+# In[3]:
 
+from packtets import pack_tets
 time_budget = 5*60
-
-start_time = time()
-
-N_add = 10
-while time() - start_time < time_budget:
-    old_tets = tets
-    tets = []
-    for j in range(num_packed):
-        tets.append(old_tets[max_ind_set[j]])
-    for j in range(N_add):
-        center = uniform(0, L, 3)
-        theta = uniform(0, 2*np.pi)
-        phi = uniform(0, 2*np.pi)
-        psi = uniform(9, 2*np.pi)
-        tets.append(Tet(center, theta, phi, psi)) 
-        
-    t0 = time()
-    g = packing_graph(tets, vx, vy, vz, num_packed)
-    t_make = time() - t0
-    
-    t0 = time()
-    max_ind_set = exact_igraph(g)
-    t_solve = time() - t0
-    
-    if t_solve < t_make:
-        N_add += 1
-    else:
-        N_add += -1
-    
-    num_packed = len(max_ind_set)
-    packing_ratio = num_packed / (6*np.sqrt(2)) / L**3
-    print(packing_ratio, num_packed, N_add)
-    #print(">> Took {:7.4f}s to compute independence number".format(time()-t0))
+res = pack_tets(L, vx, vy, vz)
 
 
-# In[ ]:
+# In[4]:
 
 import scipy as sp
 ax = a3.Axes3D(plt.figure(10))
-for i in max_ind_set:
+for tet in res:
     for x,y,z in [(0,1,2), (0,1,3), (0,2,3), (1,2,3)]:
-        verts = [tuple(tets[i].verts[x]), tuple(tets[i].verts[y]), tuple(tets[i].verts[z])]
+        verts = [tuple(tet.verts[x]), tuple(tet.verts[y]), tuple(tet.verts[z])]
         tri = a3.art3d.Poly3DCollection([verts], alpha=0.2)
         tri.set_edgecolor('k')
         ax.add_collection3d(tri)
