@@ -52,10 +52,12 @@ class Tet():
             res.append(Tet(self.center + v1, self.theta, self.phi, self.psi))    
         return res
     
-    def get_symetry(self, v1, v2, v3):
+    def get_symetry(self, v1, v2, v3, include_self = True):
         syms = [self,] + self.get_symetry_1d(v1)
         for s in syms.copy():
             syms += s.get_symetry_1d(v2)
         for s in syms.copy():
             syms += s.get_symetry_1d(v3)
+        if not include_self:
+            syms = syms[1:]
         return syms

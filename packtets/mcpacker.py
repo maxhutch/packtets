@@ -2,25 +2,26 @@ from copy import deepcopy
 from time import time
 from numpy.random import uniform
 from numpy import pi, sqrt
+from numpy import dot
 from .geometry import Tet
 from .graph import packing_graph
 from .graph import exact_igraph
 
-def pack_tets(L, vx, vy, vz, starting_set = [], time_budget = 60):
+def pack_tets(cell, starting_set = [], time_budget = 60, verbose=False):
     tets = deepcopy(starting_set)
     num_packed = len(tets)
     start_time = time()
     N_add = 10
     while time() - start_time < time_budget:
         for j in range(N_add):
-            center = uniform(0, L, 3)
+            center = dot(cell.trans, uniform(0, 1, 3))
             theta = uniform(0, 2*pi)
             phi   = uniform(0, 2*pi)
             psi   = uniform(0, 2*pi)
             tets.append(Tet(center, theta, phi, psi)) 
         
         t0 = time()
-        g = packing_graph(tets, vx, vy, vz, num_packed)
+        g = packing_graph(tets, cell.vx, cell.vy, cell.vz, num_packed)
         t_make = time() - t0
     
         t0 = time()
@@ -38,7 +39,8 @@ def pack_tets(L, vx, vy, vz, starting_set = [], time_budget = 60):
         for j in range(num_packed):
             tets.append(old_tets[max_ind_set[j]])                
         
-        packing_ratio = num_packed / (6*sqrt(2)) / L**3
-        print(packing_ratio, num_packed, N_add)
+        packing_ratio = num_packed / (6*sqrt(2)) / cell.volume
+        if verbose:
+            print(packing_ratio, num_packed, N_add)
     
     return tets
