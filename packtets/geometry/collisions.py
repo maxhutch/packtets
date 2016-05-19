@@ -43,7 +43,7 @@ def collision_face(u, v):
         return False
     
     if np.all(du == 0):
-        return collision_coplanar()
+        return collision_face_coplanar(u, v)
     
     D = np.cross(Nu, Nv)
     u, du = sort_vertices(u, du)
