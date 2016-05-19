@@ -16,8 +16,44 @@ Instead, we begin with highly collisional over-packings and search for the large
 The search is performed by recognizing valid packings as 
 `indepdent vertex sets <http://mathworld.wolfram.com/IndependentVertexSet.html>`__ of 
 the collision graph and solving the 
-`maximum independent vertex set problem <http://mathworld.wolfram.com/MaximumIndependentVertexSet.html>`__.
+`maximum independent vertex set <http://mathworld.wolfram.com/MaximumIndependentVertexSet.html>`__ (MIS) problem.
+In geometric contexts, this problem is also known as the 
+`maximum disjoint set <https://en.wikipedia.org/wiki/Maximum_disjoint_set>`__ (MDS) problem.
 The tetrahedra belonging to the maximum independent vertex set are retained for the next Monte Carlo iteration and supplemented by randomly place vertices to produce a new over-packed sample.
+
+Method
+-------
+
+The method is a refinement of an existing packing.
+When starting from scratch, the existing packing is simply empty.
+ 1. **Sample**: Add ``N_add`` tets to the packing, generally producing an over-packing
+ 2. **Graph**: Construct a graph representing the over-packing
+   * Tets are vertices.
+   * Edges connect colliding tets
+ 3. **MIS**: Find a maximum independent vertex set, which is a valid packing
+   * If there is more than one, pick one randomly.
+   * Remove tets that are not in the MIS.
+ 4. **Relax**: Re-arrange the tets to reduce volume or create gaps.
+   * Unimplemented
+ 5. **Resize**: Change the bounding geometry based on the packing.
+   * Unimplemented
+ 6. If (2) took more time than (3), incremenet ``N_add``; otherwise, decrement ``N_add``.
+ 7. Repeat
+
+The **Graph** step is performed in the ``geometry`` package with collision detection in python.
+The **MIS** step is performed with the ``python-igraph`` library, which binds to C code.
+The **Sample**, **Relax**, and **Resize** steps are critical to the performance of the method, and can be passed into the Monte Carlo refinement function.
+
+Advantages
+^^^^^^^^^^
+ * Geometry can be prescribed: can solve specific packing problems
+ * Periodic or finite boundaries (finite unimplemented)
+ * No tuning parameters, e.g. pseudo-pressure
+
+Disadvantages
+^^^^^^^^^^^^^
+ * Geometry must be persribed: will not find optimal geometry, just optimal packing
+ * MIS and MDS are NP-complete, limiting scalability
 
 LICENSE
 -------
@@ -26,4 +62,3 @@ MIT. See `License File <https://github.com/maxhutch/packtets/blob/master/LICENSE
 
 .. |Build Status| image:: https://travis-ci.org/maxhutch/packtets.svg
    :target: https://travis-ci.org/maxhutch/packtets
-.. _
