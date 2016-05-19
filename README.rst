@@ -21,6 +21,21 @@ In geometric contexts, this problem is also known as the
 `maximum disjoint set <https://en.wikipedia.org/wiki/Maximum_disjoint_set>`__ (MDS) problem.
 The tetrahedra belonging to the maximum independent vertex set are retained for the next Monte Carlo iteration and supplemented by randomly place vertices to produce a new over-packed sample.
 
+Demo
+------
+
+The ``demo`` directory contains a jupyter notebook with a widget interface to the core tetrahedra packing routines and simple visualization.
+It can be run directly or, optionally, via a docker image.
+To build the image, execute::
+
+  docker build -t packtets-demo -f demo/Dockerfile .
+
+from the top-level directory.  Then, to run the docker image::
+
+  docker run -p 8888:8888 packtets-demo
+
+finally, point your browser to ``http://localhost:8888/notebooks/PackTets.ipynb``.
+
 Method
 -------
 
