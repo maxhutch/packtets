@@ -1,20 +1,13 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[4]:
 
-get_ipython().magic('matplotlib notebook')
-import numpy as np
-import mpl_toolkits.mplot3d as a3
-import matplotlib.pyplot as plt
 from ipywidgets import widgets
 from IPython.display import display
-
-
-# In[25]:
-
 from packtets.geometry import Cell
 from packtets import *
+from packtets.utils import read_packing, write_packing
 
 def wrapper(foo):
     global res, box
@@ -30,6 +23,18 @@ def reset_packing(foo):
     global res
     res = []
     return
+
+def save_packing(foo):
+    global res, box
+    write_packing(fname.value, res, box)
+    return
+
+def load_packing(foo):
+    res, box = read_packing(fname.value)
+    for i in range(3):
+        v1[i].value = box.vx[i]
+        v2[i].value = box.vy[i]
+        v3[i].value = box.vz[i]
 
 res = []
 box = Cell([1.,0.,0.], [0.,1.,0.], [0., 0., 0.])
@@ -68,37 +73,23 @@ run.on_click(wrapper)
 reset = widgets.Button(description='Reset packing')
 reset.on_click(reset_packing)
 
-display(v1_opts, v2_opts, v3_opts, sample, relax, time_budget, run, reset)
+fname = widgets.Text(description='Filename', value='packing.txt')
+
+save = widgets.Button(description='Save packing')
+save.on_click(save_packing)
+
+load = widgets.Button(description='Load packing')
+load.on_click(load_packing)
+
+display(v1_opts, v2_opts, v3_opts, sample, relax, time_budget, run, reset, fname, save, load)
 
 
-# In[27]:
+# In[3]:
 
-import scipy as sp
-ax = a3.Axes3D(plt.figure(10))
+get_ipython().magic('matplotlib notebook')
+import mpl_toolkits.mplot3d as a3
+import matplotlib.pyplot as plt
+from packtets.utils import plot_packing
 
-bounding = [box.vx, box.vy, box.vz]
-for i,j in [(0,1), (0,2), (1,2)]:
-    verts = [(0,0,0)]
-    verts.append(bounding[i])
-    verts.append(bounding[i]+bounding[j])
-    verts.append(bounding[j])
-    face = a3.art3d.Poly3DCollection([verts], alpha=0.1)
-    face.set_facecolor('red')
-    face.set_edgecolor('k')
-
-    ax.add_collection3d(face)
-
-
-for tet in res:
-    syms = tet.get_symmetry(box.vx, box.vy, box.vz)
-    for s in syms[0:1]:
-        for x,y,z in [(0,1,2), (0,1,3), (0,2,3), (1,2,3)]:
-            verts = [tuple(s.verts[x]), tuple(s.verts[y]), tuple(s.verts[z])]
-            tri = a3.art3d.Poly3DCollection([verts], alpha=0.2)
-            tri.set_edgecolor('k')
-            ax.add_collection3d(tri)
-
-ax.set_xlim(0,max([v[0] for v in bounding]))
-ax.set_ylim(0,max([v[1] for v in bounding]))
-ax.set_zlim(0,max([v[2] for v in bounding]));
+plot_packing(res, box)
 

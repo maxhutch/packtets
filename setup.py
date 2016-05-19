@@ -27,5 +27,5 @@ setup(name='packtets',
                             .split('\n')),
       long_description=(open('README.rst').read() if exists('README.rst')
                               else ''),
-      packages=['packtets', 'packtets.geometry', 'packtets.graph'],
+      packages=['packtets', 'packtets.geometry', 'packtets.graph', 'packtets.utils'],
       zip_safe=False)
