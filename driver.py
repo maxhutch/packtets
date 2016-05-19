@@ -13,8 +13,13 @@ else:
     box = Cell([1., 1., 0.], [0., 1., 1.], [1., 0., 1.])
     packing = []
 
-from packtets import pack_tets
-packing = pack_tets(box, input_packing=packing, time_budget=60, verbose=True, N_start = 40)
+from packtets import pack_tets, concentrated_sample
+packing = pack_tets(box, 
+    input_packing=packing, 
+    sample=concentrated_sample,
+    time_budget=60, 
+    verbose=True, 
+    N_start = 40)
 packing_ratio = len(packing) / (6*np.sqrt(2)) / box.volume
 
 print("Achieved packing ratio of {}".format(packing_ratio))

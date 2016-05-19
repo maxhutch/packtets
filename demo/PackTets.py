@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 from ipywidgets import widgets
 from IPython.display import display
@@ -62,7 +62,7 @@ v3_opts = widgets.HBox(children=v3)
 
 sample = widgets.Dropdown(
     description="Sampling method",
-    options={"Uniform": uniform_sample}, 
+    options={"Uniform": uniform_sample, "Concentrated": concentrated_sample}, 
     value=uniform_sample)
 
 relax = widgets.Dropdown(
@@ -87,7 +87,7 @@ load.on_click(load_packing)
 display(v1_opts, v2_opts, v3_opts, sample, relax, time_budget, run, reset, fname, save, load)
 
 
-# In[2]:
+# In[ ]:
 
 get_ipython().magic('matplotlib notebook')
 import mpl_toolkits.mplot3d as a3
