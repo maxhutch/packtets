@@ -1,5 +1,8 @@
-import mpl_toolkits.mplot3d as a3
-import matplotlib.pyplot as plt
+try:
+    import mpl_toolkits.mplot3d as a3
+    import matplotlib.pyplot as plt
+except: ImportError
+    pass
 
 def plot_packing(packing, box=None, use_symmetry=False):
     """Plot packing within box"""
