@@ -1,7 +1,7 @@
 try:
     import mpl_toolkits.mplot3d as a3
     import matplotlib.pyplot as plt
-except: ImportError
+except ImportError:
     pass
 
 def plot_packing(packing, box=None, use_symmetry=False):
