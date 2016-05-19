@@ -5,9 +5,6 @@
 
 get_ipython().magic('matplotlib notebook')
 import numpy as np
-from numpy.random import uniform
-import igraph 
-from time import time
 import mpl_toolkits.mplot3d as a3
 import matplotlib.pyplot as plt
 
@@ -16,10 +13,14 @@ import matplotlib.pyplot as plt
 
 from packtets import pack_tets
 from packtets.geometry import Cell
-L = 4; theta = np.pi/2
+L = .75; theta = np.pi/2
 vx = L * np.array([1,0,0])
 vy = L * np.array([np.cos(theta),np.sin(theta),0])
 vz = L * np.array([np.cos(theta)*np.cos(theta),np.cos(theta)*np.sin(theta),np.sin(theta)])
+
+#vx = L * np.array([1,1,0])
+#vy = L * np.array([1,0,1])
+#vz = L * np.array([0,1,1])
 box = Cell(vx, vy, vz)
 res = pack_tets(box, time_budget=60, verbose=True)
 
@@ -43,7 +44,7 @@ for i,j in [(0,1), (0,2), (1,2)]:
 
 
 for tet in res:
-    syms = tet.get_symetry(box.vx, box.vy, box.vz)
+    syms = tet.get_symmetry(box.vx, box.vy, box.vz)
     for s in syms[0:1]:
         for x,y,z in [(0,1,2), (0,1,3), (0,2,3), (1,2,3)]:
             verts = [tuple(s.verts[x]), tuple(s.verts[y]), tuple(s.verts[z])]
