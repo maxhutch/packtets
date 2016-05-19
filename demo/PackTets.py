@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[4]:
+# In[1]:
 
 from ipywidgets import widgets
 from IPython.display import display
@@ -30,6 +30,7 @@ def save_packing(foo):
     return
 
 def load_packing(foo):
+    global res, box
     res, box = read_packing(fname.value)
     for i in range(3):
         v1[i].value = box.vx[i]
@@ -40,7 +41,9 @@ res = []
 box = Cell([1.,0.,0.], [0.,1.,0.], [0., 0., 0.])
 
 time_budget = widgets.BoundedFloatText(value=15, min=0.0, description='Budget (s):')
-verbose = True
+
+verbose = False
+
 v1 = [widgets.BoundedFloatText(description="v1", min=0., value=1.),
       widgets.BoundedFloatText(min=0., value=0.),
       widgets.BoundedFloatText(min=0., value=0.),
@@ -84,7 +87,7 @@ load.on_click(load_packing)
 display(v1_opts, v2_opts, v3_opts, sample, relax, time_budget, run, reset, fname, save, load)
 
 
-# In[3]:
+# In[2]:
 
 get_ipython().magic('matplotlib notebook')
 import mpl_toolkits.mplot3d as a3
