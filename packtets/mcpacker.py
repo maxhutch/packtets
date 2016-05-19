@@ -44,38 +44,52 @@ def no_resize(packing, cell):
 def pack_tets(cell, input_packing=[], time_budget=60, verbose=False, N_start=10, 
         sample=uniform_sample, relax=no_relax, resize=no_resize):
     """Packs tets into cell, returning packing"""
-    tets = deepcopy(input_packing)
-    num_packed = len(tets)
+
+    # copy to stay pure
+    packing = deepcopy(input_packing)
+
+    # pre-loop initialization of time and packing info
     start_time = time()
+    num_packed = len(packing)
     N_add = N_start
+
+    # run until out of time
     while time() - start_time < time_budget:
-        tets = sample(tets, cell, N_add)
-               
+        # Step 1: Sample new tets onto previous solution
+        packing = sample(packing, cell, N_add)
+              
+        # Step 2: construct collision graph 
         t0 = time()
-        g = packing_graph(tets, cell.vx, cell.vy, cell.vz, num_packed)
+        g = packing_graph(packing, cell.vx, cell.vy, cell.vz, num_packed)
         t_make = time() - t0
     
+        # Step 3: Solve max independent set problem
         t0 = time()
         max_ind_set = exact_igraph(g)
         t_solve = time() - t0
         num_packed = len(max_ind_set)
-        
+       
+        # if the MIS was cheap, add more tets next time 
         if t_solve < t_make:
             N_add += 1
         else:
             N_add += -1
 
-        old_tets = tets
-        tets = []
+        # extract new max packing
+        old_packing = packing
+        packing = []
         for j in range(num_packed):
-            tets.append(old_tets[max_ind_set[j]])                
+            packing.append(old_packing[max_ind_set[j]])                
 
-        tets = relax(tets, cell)
+        # Step 4: Relax the packing 
+        packing = relax(packing, cell)
+       
+        # Step 5: Resize the cell  
+        packing, cell = resize(packing, cell)
         
-        tets, cell = resize(tets, cell)
-         
-        packing_ratio = num_packed / (6*sqrt(2)) / cell.volume
+        # print packing density
         if verbose:
+            packing_ratio = num_packed / (6*sqrt(2)) / cell.volume
             print(packing_ratio, num_packed, N_add)
     
-    return tets
+    return packing
