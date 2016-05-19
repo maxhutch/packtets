@@ -28,5 +28,5 @@ def test_no_collision():
 def test_symmetry():
     center = np.array([0., 0., 0.])
     t1 = Tet(center, 3., 2., 1.)
-    syms = t1.get_symetry([2., 0., 0.], [0., 2., 0.], [0., 0., 2.])
+    syms = t1.get_symmetry([2., 0., 0.], [0., 2., 0.], [0., 0., 2.])
     assert len(syms) == 8

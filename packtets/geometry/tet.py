@@ -44,7 +44,7 @@ class Tet():
                     return True
         return False
     
-    def get_symetry_1d(self, v1):
+    def get_symmetry_1d(self, v1):
         res = []
         if norm(v1) - np.dot(self.center, v1) / norm(v1) < 2*self.radius:
             res.append(Tet(self.center - v1, self.theta, self.phi, self.psi))
@@ -52,12 +52,12 @@ class Tet():
             res.append(Tet(self.center + v1, self.theta, self.phi, self.psi))    
         return res
     
-    def get_symetry(self, v1, v2, v3, include_self = True):
-        syms = [self,] + self.get_symetry_1d(v1)
+    def get_symmetry(self, v1, v2, v3, include_self = True):
+        syms = [self,] + self.get_symmetry_1d(v1)
         for s in syms.copy():
-            syms += s.get_symetry_1d(v2)
+            syms += s.get_symmetry_1d(v2)
         for s in syms.copy():
-            syms += s.get_symetry_1d(v3)
+            syms += s.get_symmetry_1d(v3)
         if not include_self:
             syms = syms[1:]
         return syms
