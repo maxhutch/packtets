@@ -7,22 +7,27 @@ from .geometry import Tet
 from .graph import packing_graph
 from .graph import exact_igraph
 
-def uniform_sample(tets, cell, N_add):
+def uniform_sample(packing, cell, N_add):
+    """Uniformally sample the cell volume and tet orientation and return packing"""
     for j in range(N_add):
         center = dot(cell.trans, uniform(0, 1, 3))
         theta = uniform(0, 2*pi)
         phi   = uniform(0, 2*pi)
         psi   = uniform(0, 2*pi)
-        tets.append(Tet(center, theta, phi, psi)) 
-    return tets 
+        packing.append(Tet(center, theta, phi, psi)) 
+    return packing
 
-def no_relax(tets, cell):
-    return tets
+def no_relax(packing, cell):
+    """Don't do any relaxation"""
+    return packing
 
-def no_resize(tets, cell):
-    return tets, cell
+def no_resize(packing, cell):
+    """Don't do any resizing"""
+    return packing, cell
 
-def pack_tets(cell, starting_set = [], time_budget = 60, verbose=False, N_start = 10, sample=uniform_sample, relax=no_relax, resize=no_resize):
+def pack_tets(cell, startinativeng_set=[], time_budget=60, verbose=False, N_start=10, 
+        sample=uniform_sample, relax=no_relax, resize=no_resize):
+    """Packs tets into cell, returning packing"""
     tets = deepcopy(starting_set)
     num_packed = len(tets)
     start_time = time()
