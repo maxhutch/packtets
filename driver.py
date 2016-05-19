@@ -1,7 +1,7 @@
 from sys import argv
 from os.path import exists
 from packtets.geometry import Cell, Tet
-from packtets.utils import read_packing, write_packing
+from packtets.utils import read_packing, write_packing, write_verts
 import numpy as np
 
 solution_file = argv[1]
@@ -20,4 +20,5 @@ packing_ratio = len(packing) / (6*np.sqrt(2)) / box.volume
 print("Achieved packing ratio of {}".format(packing_ratio))
 
 write_packing(solution_file, packing, box)
+write_verts(solution_file+".vert", packing, box)
 
