@@ -26,34 +26,45 @@ Method
 
 The method is a refinement of an existing packing.
 When starting from scratch, the existing packing is simply empty.
- 1. **Sample**: Add ``N_add`` tets to the packing, generally producing an over-packing
- 2. **Graph**: Construct a graph representing the over-packing
+
+1. **Sample**: Add ``N_add`` tets to the packing, generally producing an over-packing
+2. **Graph**: Construct a graph representing the over-packing
+
    * Tets are vertices.
    * Edges connect colliding tets
- 3. **MIS**: Find a maximum independent vertex set, which is a valid packing
-   * If there is more than one, pick one randomly.
-   * Remove tets that are not in the MIS.
- 4. **Relax**: Re-arrange the tets to reduce volume or create gaps.
-   * Unimplemented
- 5. **Resize**: Change the bounding geometry based on the packing.
-   * Unimplemented
- 6. If (2) took more time than (3), incremenet ``N_add``; otherwise, decrement ``N_add``.
- 7. Repeat
+
+3. **MIS**: Find a maximum independent vertex set, which is a valid packing
+
+   *  If there is more than one, pick one randomly.
+   *  Remove tets that are not in the MIS.
+
+4. **Relax**: Re-arrange the tets to reduce volume or create gaps.
+
+   *  Unimplemented
+
+5. **Resize**: Change the bounding geometry based on the packing.
+
+   *  Unimplemented
+
+6. If **Graph** took more time than **MIS**, incremenet ``N_add``; otherwise, decrement ``N_add``.
+7. Repeat
 
 The **Graph** step is performed in the ``geometry`` package with collision detection in python.
 The **MIS** step is performed with the ``python-igraph`` library, which binds to C code.
-The **Sample**, **Relax**, and **Resize** steps are critical to the performance of the method, and can be passed into the Monte Carlo refinement function.
+The **Sample**, **Relax**, and **Resize** steps are critical to the performance of the method, and can be passed into the Monte Carlo refinement function as ``sample``, ``relax``, and ``resize``, respectively.
 
 Advantages
 ^^^^^^^^^^
- * Geometry can be prescribed: can solve specific packing problems
- * Periodic or finite boundaries (finite unimplemented)
- * No tuning parameters, e.g. pseudo-pressure
+
+* Geometry can be prescribed: can solve specific packing problems
+* Periodic or finite boundaries (finite unimplemented)
+* No tuning parameters, e.g. pseudo-pressure
 
 Disadvantages
 ^^^^^^^^^^^^^
- * Geometry must be persribed: will not find optimal geometry, just optimal packing
- * MIS and MDS are NP-complete, limiting scalability
+
+* Geometry must be perscribed: will not find optimal geometry, just optimal packing
+* MIS and MDS are NP-complete, limiting scalability
 
 LICENSE
 -------
