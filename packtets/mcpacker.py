@@ -7,11 +7,11 @@ from .geometry import Tet
 from .graph import packing_graph
 from .graph import exact_igraph
 
-def pack_tets(cell, starting_set = [], time_budget = 60, verbose=False):
+def pack_tets(cell, starting_set = [], time_budget = 60, verbose=False, N_start = 10):
     tets = deepcopy(starting_set)
     num_packed = len(tets)
     start_time = time()
-    N_add = 10
+    N_add = N_start
     while time() - start_time < time_budget:
         for j in range(N_add):
             center = dot(cell.trans, uniform(0, 1, 3))
