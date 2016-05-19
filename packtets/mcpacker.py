@@ -25,10 +25,10 @@ def no_resize(packing, cell):
     """Don't do any resizing"""
     return packing, cell
 
-def pack_tets(cell, startinativeng_set=[], time_budget=60, verbose=False, N_start=10, 
+def pack_tets(cell, input_packing=[], time_budget=60, verbose=False, N_start=10, 
         sample=uniform_sample, relax=no_relax, resize=no_resize):
     """Packs tets into cell, returning packing"""
-    tets = deepcopy(starting_set)
+    tets = deepcopy(input_packing)
     num_packed = len(tets)
     start_time = time()
     N_add = N_start
